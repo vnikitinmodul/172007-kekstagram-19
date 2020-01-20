@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Виталий Никитин](https://up.htmlacademy.ru/javascript/19/user/172007).
-* Наставник: `Максим Прусаков`.
+* Наставник: [Максим Прусаков](https://up.htmlacademy.ru/javascript/19/user/83559).
 
 ---
 
