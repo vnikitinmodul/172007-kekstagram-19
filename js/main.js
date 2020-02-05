@@ -2,6 +2,8 @@
 
 var PHOTOS_NUM = 25;
 
+var COMMENT_IMG_SIZE = 35;
+
 var LikesNum = {
   MIN: 15,
   MAX: 200
@@ -36,6 +38,8 @@ var NAMES = [
   'Катя',
   'Женя'
 ];
+
+var socialComments = document.querySelector('.social__comments');
 
 var getRandomNum = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -93,4 +97,82 @@ var clonePhotos = function (data) {
   }
 };
 
-clonePhotos(generateData(PHOTOS_NUM));
+var setPictureData = function (data) {
+  var pictureImage = document.querySelector('.big-picture__img img');
+  var pictureLikes = document.querySelector('.likes-count');
+  var pictureComments = document.querySelector('.comments-count');
+  var socialCaption = document.querySelector('.social__caption');
+
+  pictureImage.src = data[0].url;
+  pictureLikes.textContent = data[0].likes;
+  pictureComments.textContent = data[0].comments;
+  socialCaption.textContent = data[0].description;
+};
+
+var showBlock = function (selector) {
+  var block = document.querySelector(selector);
+
+  block.classList.remove('hidden');
+};
+
+var hideBlock = function (selector) {
+  var block = document.querySelector(selector);
+
+  block.classList.add('hidden');
+};
+
+var clearComments = function () {
+  var currentComments = socialComments.querySelectorAll('.social__comment');
+
+  for (var c = 0; c < currentComments.length; c++) {
+    currentComments[c].remove();
+  }
+};
+
+var renderComment = function () {
+  var commentTemplate = document.createElement('li');
+  var commentImg = document.createElement('img');
+  var commentText = document.createElement('p');
+
+  commentTemplate.classList.add('social__comment');
+  commentImg.classList.add('social__picture');
+  commentText.classList.add('social__text');
+
+  commentImg.width = COMMENT_IMG_SIZE;
+  commentImg.height = COMMENT_IMG_SIZE;
+
+  commentTemplate.appendChild(commentImg);
+  commentTemplate.appendChild(commentText);
+
+  return commentTemplate;
+};
+
+var putComments = function (data, template) {
+  var commentsArray = data[0].comments;
+
+  for (var l = 0; l < commentsArray.length; l++) {
+    var currentCommentDOM = template.cloneNode(true);
+    var currentComment = commentsArray[l];
+
+    currentCommentDOM.querySelector('.social__picture').src = currentComment.avatar;
+    currentCommentDOM.querySelector('.social__picture').alt = currentComment.name;
+    currentCommentDOM.querySelector('.social__text').textContent = currentComment.message;
+    socialComments.appendChild(currentCommentDOM);
+  }
+};
+
+var photosData = generateData(PHOTOS_NUM);
+
+clonePhotos(photosData);
+
+setPictureData(photosData);
+
+clearComments();
+
+putComments(photosData, renderComment());
+
+hideBlock('.social__comment-count');
+
+hideBlock('.comments-loader');
+
+showBlock('.big-picture');
