@@ -47,6 +47,41 @@ var Keys = {
   ENTER: 'Enter'
 };
 
+var uploadedImage = {
+  SIZE_VALUE_STEP: 25,
+  SIZE_MIN: 25,
+  SIZE_MAX: 100,
+  DEFAULT_SIZE_VALUE: 100,
+  size: 100,
+  scaleControlSmaller: document.querySelector('.scale__control--smaller'),
+  scaleControlBigger: document.querySelector('.scale__control--bigger'),
+  scaleControlValue: document.querySelector('.scale__control--value'),
+  uploadPreviewImage: document.querySelector('.img-upload__preview img'),
+  getDefaultSize: function () {
+    return this.DEFAULT_SIZE_VALUE;
+  },
+  getSize: function () {
+    return this.size + '%';
+  },
+  setSize: function (value) {
+    this.size = value;
+    this.scaleControlValue.value = this.size + '%';
+    this.uploadPreviewImage.style.transform = 'scale(' + this.size / 100 + ')';
+  },
+  setSizeSmaller: function () {
+    if (this.size > this.SIZE_MIN) {
+      var newSize = this.size - this.SIZE_VALUE_STEP;
+      this.setSize(newSize);
+    }
+  },
+  setSizeBigger: function () {
+    if (this.size < this.SIZE_MAX) {
+      var newSize = this.size + this.SIZE_VALUE_STEP;
+      this.setSize(newSize);
+    }
+  }
+};
+
 var socialComments = document.querySelector('.social__comments');
 var bodyBlock = document.querySelector('body');
 var uploadFile = document.querySelector('#upload-file');
@@ -143,12 +178,12 @@ var switchBodyModalMode = function (hide) {
   }
 };
 
-var showModal = function () {
+var showPhotoModal = function () {
   switchBodyModalMode();
   showBlock('.big-picture');
 };
 
-var hideModal = function () {
+var hidePhotoModal = function () {
   switchBodyModalMode(true);
   hideBlock('.big-picture');
 };
@@ -199,15 +234,20 @@ var closeUploadForm = function () {
   hideBlock('.img-upload__overlay');
   uploadFile.value = '';
   document.removeEventListener('keydown', onPopupEscPress);
+  uploadedImage.scaleControlSmaller.removeEventListener('click', onScaleControlSmallerClick);
+  uploadedImage.scaleControlBigger.removeEventListener('click', onScaleControlBiggerClick);
 };
 
 
 // Обработчики
 
-var onChangeUploadFile = function () {
+var onUploadFileChange = function () {
   switchBodyModalMode();
   showBlock('.img-upload__overlay');
+  uploadedImage.setSize(uploadedImage.getDefaultSize());
   document.addEventListener('keydown', onPopupEscPress);
+  uploadedImage.scaleControlSmaller.addEventListener('click', onScaleControlSmallerClick);
+  uploadedImage.scaleControlBigger.addEventListener('click', onScaleControlBiggerClick);
 };
 
 var onSetupCloseClick = function () {
@@ -220,9 +260,18 @@ var onPopupEscPress = function (evt) {
   }
 };
 
+var onScaleControlSmallerClick = function () {
+  uploadedImage.setSizeSmaller();
+};
+
+var onScaleControlBiggerClick = function () {
+  uploadedImage.setSizeBigger();
+};
+
+
 // Вызов обработчиков
 
-uploadFile.addEventListener('change', onChangeUploadFile);
+uploadFile.addEventListener('change', onUploadFileChange);
 
 uploadCancel.addEventListener('click', onSetupCloseClick);
 
