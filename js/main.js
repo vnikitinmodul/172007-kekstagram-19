@@ -1,5 +1,8 @@
 'use strict';
 
+
+// Переменные
+
 var PHOTOS_NUM = 25;
 
 var COMMENT_IMG_SIZE = 35;
@@ -39,7 +42,18 @@ var NAMES = [
   'Женя'
 ];
 
+var Keys = {
+  ESC: 'Escape',
+  ENTER: 'Enter'
+};
+
 var socialComments = document.querySelector('.social__comments');
+var bodyBlock = document.querySelector('body');
+var uploadFile = document.querySelector('#upload-file');
+var uploadCancel = document.querySelector('#upload-cancel');
+
+
+// Функции
 
 var getRandomNum = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -121,6 +135,24 @@ var hideBlock = function (selector) {
   block.classList.add('hidden');
 };
 
+var switchBodyModalMode = function (hide) {
+  if (hide) {
+    bodyBlock.classList.remove('modal-open');
+  } else {
+    bodyBlock.classList.add('modal-open');
+  }
+};
+
+var showModal = function () {
+  switchBodyModalMode();
+  showBlock('.big-picture');
+};
+
+var hideModal = function () {
+  switchBodyModalMode(true);
+  hideBlock('.big-picture');
+};
+
 var clearComments = function () {
   var currentComments = socialComments.querySelectorAll('.social__comment');
 
@@ -161,6 +193,42 @@ var putComments = function (data, template) {
   }
 };
 
+
+var closeUploadForm = function () {
+  switchBodyModalMode(true);
+  hideBlock('.img-upload__overlay');
+  uploadFile.value = '';
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+
+// Обработчики
+
+var onChangeUploadFile = function () {
+  switchBodyModalMode();
+  showBlock('.img-upload__overlay');
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+var onSetupCloseClick = function () {
+  closeUploadForm();
+};
+
+var onPopupEscPress = function (evt) {
+  if (evt.key === Keys.ESC) {
+    closeUploadForm();
+  }
+};
+
+// Вызов обработчиков
+
+uploadFile.addEventListener('change', onChangeUploadFile);
+
+uploadCancel.addEventListener('click', onSetupCloseClick);
+
+
+// Вызов функций
+
 var photosData = generateData(PHOTOS_NUM);
 
 clonePhotos(photosData);
@@ -174,5 +242,3 @@ putComments(photosData, renderComment());
 hideBlock('.social__comment-count');
 
 hideBlock('.comments-loader');
-
-showBlock('.big-picture');
