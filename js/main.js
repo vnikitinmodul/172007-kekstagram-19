@@ -47,26 +47,55 @@ var Keys = {
   ENTER: 'Enter'
 };
 
+var uploadedImageControls = {
+  scaleControlSmaller: document.querySelector('.scale__control--smaller'),
+  scaleControlBigger: document.querySelector('.scale__control--bigger'),
+  effectLevelPin: document.querySelector('.effect-level__pin'),
+  effectLevelDepth: document.querySelector('.effect-level__depth')
+};
+
 var uploadedImage = {
   SIZE_VALUE_STEP: 25,
   SIZE_MIN: 25,
   SIZE_MAX: 100,
   DEFAULT_SIZE_VALUE: 100,
+  DEFAULT_EFFECT: 'none',
+  DEFAULT_EFFECT_VALUE: 100,
+  DEFAULT_FILTER: '',
   size: 100,
-  scaleControlSmaller: document.querySelector('.scale__control--smaller'),
-  scaleControlBigger: document.querySelector('.scale__control--bigger'),
-  scaleControlValue: document.querySelector('.scale__control--value'),
+  effect: 'none',
+  effectValue: 100,
+  filter: '',
   uploadPreviewImage: document.querySelector('.img-upload__preview img'),
+  scaleControlValue: document.querySelector('.scale__control--value'),
+  effectLevelValue: document.querySelector('.effect-level__value'),
   getDefaultSize: function () {
     return this.DEFAULT_SIZE_VALUE;
   },
-  getSize: function () {
-    return this.size + '%';
+  getDefaultEffect: function () {
+    return this.DEFAULT_EFFECT;
+  },
+  getDefaultEffectValue: function () {
+    return this.DEFAULT_EFFECT_VALUE;
+  },
+  getDefaultFilter: function () {
+    return this.DEFAULT_FILTER;
   },
   setSize: function (value) {
     this.size = value;
-    this.scaleControlValue.value = this.size + '%';
-    this.uploadPreviewImage.style.transform = 'scale(' + this.size / 100 + ')';
+    this.scaleControlValue.value = value + '%';
+    this.uploadPreviewImage.style.transform = 'scale(' + value / 100 + ')';
+  },
+  setEffect: function (filter) {
+    this.effect = filter;
+    this.setEffectValue(this.DEFAULT_EFFECT_VALUE);
+    this.uploadPreviewImage.className = '';
+    this.uploadPreviewImage.classList.add('effects__preview--' + filter);
+  },
+  setEffectValue: function (value) {
+    this.effectValue = value;
+    uploadedImageControls.effectLevelPin.style.left = value + '%';
+    uploadedImageControls.effectLevelDepth.style.width = value + '%';
   },
   setSizeSmaller: function () {
     if (this.size > this.SIZE_MIN) {
@@ -79,6 +108,10 @@ var uploadedImage = {
       var newSize = this.size + this.SIZE_VALUE_STEP;
       this.setSize(newSize);
     }
+  },
+  setFilter: function (value) {
+    this.filter = value;
+    this.uploadPreviewImage.style.filter = value;
   }
 };
 
@@ -86,7 +119,7 @@ var socialComments = document.querySelector('.social__comments');
 var bodyBlock = document.querySelector('body');
 var uploadFile = document.querySelector('#upload-file');
 var uploadCancel = document.querySelector('#upload-cancel');
-
+var effectsRadio = document.querySelectorAll('.effects__radio');
 
 // Функции
 
@@ -178,15 +211,15 @@ var switchBodyModalMode = function (hide) {
   }
 };
 
-var showPhotoModal = function () {
-  switchBodyModalMode();
-  showBlock('.big-picture');
-};
+// var showPhotoModal = function () {
+//   switchBodyModalMode();
+//   showBlock('.big-picture');
+// };
 
-var hidePhotoModal = function () {
-  switchBodyModalMode(true);
-  hideBlock('.big-picture');
-};
+// var hidePhotoModal = function () {
+//   switchBodyModalMode(true);
+//   hideBlock('.big-picture');
+// };
 
 var clearComments = function () {
   var currentComments = socialComments.querySelectorAll('.social__comment');
@@ -234,8 +267,11 @@ var closeUploadForm = function () {
   hideBlock('.img-upload__overlay');
   uploadFile.value = '';
   document.removeEventListener('keydown', onPopupEscPress);
-  uploadedImage.scaleControlSmaller.removeEventListener('click', onScaleControlSmallerClick);
-  uploadedImage.scaleControlBigger.removeEventListener('click', onScaleControlBiggerClick);
+  uploadedImageControls.scaleControlSmaller.removeEventListener('click', onScaleControlSmallerClick);
+  uploadedImageControls.scaleControlBigger.removeEventListener('click', onScaleControlBiggerClick);
+  for (var m = 0; m < effectsRadio.length; m++) {
+    effectsRadio[m].removeEventListener('change', onEffectsChange);
+  }
 };
 
 
@@ -245,9 +281,13 @@ var onUploadFileChange = function () {
   switchBodyModalMode();
   showBlock('.img-upload__overlay');
   uploadedImage.setSize(uploadedImage.getDefaultSize());
+  uploadedImage.setEffectValue(uploadedImage.getDefaultEffectValue());
   document.addEventListener('keydown', onPopupEscPress);
-  uploadedImage.scaleControlSmaller.addEventListener('click', onScaleControlSmallerClick);
-  uploadedImage.scaleControlBigger.addEventListener('click', onScaleControlBiggerClick);
+  uploadedImageControls.scaleControlSmaller.addEventListener('click', onScaleControlSmallerClick);
+  uploadedImageControls.scaleControlBigger.addEventListener('click', onScaleControlBiggerClick);
+  for (var m = 0; m < effectsRadio.length; m++) {
+    effectsRadio[m].addEventListener('change', onEffectsChange);
+  }
 };
 
 var onSetupCloseClick = function () {
@@ -268,6 +308,23 @@ var onScaleControlBiggerClick = function () {
   uploadedImage.setSizeBigger();
 };
 
+var onEffectsChange = function (evt) {
+  uploadedImage.setEffect(evt.target.value);
+};
+
+var onEffectLevelPinMousedown = function () {
+  uploadedImageControls.effectLevelPin.addEventListener('mousemove', onEffectLevelPinMousemove);
+  uploadedImageControls.effectLevelPin.addEventListener('mouseup', onEffectLevelPinMouseup);
+};
+
+var onEffectLevelPinMousemove = function () {
+  // console.log(evt);
+};
+
+var onEffectLevelPinMouseup = function () {
+  uploadedImageControls.effectLevelPin.removeEventListener('mousemove', onEffectLevelPinMousemove);
+  uploadedImageControls.effectLevelPin.removeEventListener('mouseup', onEffectLevelPinMouseup);
+};
 
 // Вызов обработчиков
 
@@ -275,6 +332,7 @@ uploadFile.addEventListener('change', onUploadFileChange);
 
 uploadCancel.addEventListener('click', onSetupCloseClick);
 
+uploadedImageControls.effectLevelPin.addEventListener('mousedown', onEffectLevelPinMousedown);
 
 // Вызов функций
 
