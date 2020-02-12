@@ -152,7 +152,7 @@ var uploadedImage = {
   }
 };
 
-var HashParams = {
+var HashParam = {
   START_SYMBOL: '#',
   SEPARATION_SYMBOL: ' ',
   MAX_COUNT: 5,
@@ -162,7 +162,7 @@ var HashParams = {
 
 var hashValidation = {
   checkHashes: function (value, condition) {
-    var hashArray = utils.arrayToLowerCase(utils.cutSymbols(HashParams.SEPARATION_SYMBOL, value).split(HashParams.SEPARATION_SYMBOL));
+    var hashArray = utils.arrayToLowerCase(utils.cutSymbols(HashParam.SEPARATION_SYMBOL, value).split(HashParam.SEPARATION_SYMBOL));
     for (var c = 0; c < hashArray.length; c++) {
       if (condition(hashArray[c], hashArray)) {
         return false;
@@ -171,36 +171,36 @@ var hashValidation = {
     return true;
   },
   symbols: function (value) {
-    var regSymbols = new RegExp('[^A-Za-zА-Яа-я0-9' + HashParams.SEPARATION_SYMBOL + HashParams.START_SYMBOL + ']');
+    var regSymbols = new RegExp('[^A-Za-zА-Яа-я0-9' + HashParam.SEPARATION_SYMBOL + HashParam.START_SYMBOL + ']');
     return !~value.search(regSymbols);
   },
   hasStart: function (value) {
     return this.checkHashes(value, this.hasStartCondition);
   },
   hasStartCondition: function (item) {
-    return item.indexOf(HashParams.START_SYMBOL) !== 0;
+    return item.indexOf(HashParam.START_SYMBOL) !== 0;
   },
   hasSeparation: function (value) {
     return this.checkHashes(value, this.hasSeparationCondition);
   },
   hasSeparationCondition: function (item) {
-    return utils.isStringInString(HashParams.START_SYMBOL, item.slice(HashParams.START_SYMBOL.length));
+    return utils.isStringInString(HashParam.START_SYMBOL, item.slice(HashParam.START_SYMBOL.length));
   },
   maxCount: function (value) {
-    var regMaxCount = new RegExp(HashParams.START_SYMBOL, 'g');
-    return value.match(regMaxCount).length <= HashParams.MAX_COUNT;
+    var regMaxCount = new RegExp(HashParam.START_SYMBOL, 'g');
+    return value.match(regMaxCount).length <= HashParam.MAX_COUNT;
   },
   minLength: function (value) {
     return this.checkHashes(value, this.minLengthCondition);
   },
   minLengthCondition: function (item) {
-    return item.slice(HashParams.START_SYMBOL.length).length < HashParams.MIN_LENGTH;
+    return item.slice(HashParam.START_SYMBOL.length).length < HashParam.MIN_LENGTH;
   },
   maxLength: function (value) {
     return this.checkHashes(value, this.maxLengthCondition);
   },
   maxLengthCondition: function (item) {
-    return item.slice(HashParams.START_SYMBOL.length).length > HashParams.MAX_LENGTH;
+    return item.slice(HashParam.START_SYMBOL.length).length > HashParam.MAX_LENGTH;
   },
   noDouble: function (value) {
     return this.checkHashes(value, this.noDoubleCondition);
@@ -211,27 +211,13 @@ var hashValidation = {
 };
 
 var hashErrorMessages = {
-  symbols: function () {
-    return 'Хэштег может содержать только буквы и цифры';
-  },
-  hasStart: function () {
-    return 'Хэштег должен начинаться с символа ' + HashParams.START_SYMBOL;
-  },
-  hasSeparation: function () {
-    return 'Хэштеги должны быть разделены пробелом';
-  },
-  maxCount: function () {
-    return 'Должно быть не более ' + HashParams.MAX_COUNT + ' хэштегов';
-  },
-  minLength: function () {
-    return 'Длина хэштега должна быть не менее ' + HashParams.MIN_LENGTH;
-  },
-  maxLength: function () {
-    return 'Длина хэштега должна быть не более ' + HashParams.MAX_LENGTH;
-  },
-  noDouble: function () {
-    return 'Хэштеги не должны повторяться';
-  }
+  symbols: 'Хэштег может содержать только буквы и цифры',
+  hasStart: 'Хэштег должен начинаться с символа ' + HashParam.START_SYMBOL,
+  hasSeparation: 'Хэштеги должны быть разделены пробелом',
+  maxCount: 'Должно быть не более ' + HashParam.MAX_COUNT + ' хэштегов',
+  minLength: 'Длина хэштега должна быть не менее ' + HashParam.MIN_LENGTH,
+  maxLength: 'Длина хэштега должна быть не более ' + HashParam.MAX_LENGTH,
+  noDouble: 'Хэштеги не должны повторяться'
 };
 
 var socialComments = document.querySelector('.social__comments');
@@ -443,19 +429,19 @@ var onTextHahtagsInput = function (evt) {
   if (!value) {
     target.setCustomValidity('');
   } else if (!hashValidation.symbols(value)) {
-    target.setCustomValidity(hashErrorMessages.symbols());
+    target.setCustomValidity(hashErrorMessages.symbols);
   } else if (!hashValidation.hasStart(value)) {
-    target.setCustomValidity(hashErrorMessages.hasStart());
+    target.setCustomValidity(hashErrorMessages.hasStart);
   } else if (!hashValidation.hasSeparation(value)) {
-    target.setCustomValidity(hashErrorMessages.hasSeparation());
+    target.setCustomValidity(hashErrorMessages.hasSeparation);
   } else if (!hashValidation.maxCount(value)) {
-    target.setCustomValidity(hashErrorMessages.maxCount());
+    target.setCustomValidity(hashErrorMessages.maxCount);
   } else if (!hashValidation.minLength(value)) {
-    target.setCustomValidity(hashErrorMessages.minLength());
+    target.setCustomValidity(hashErrorMessages.minLength);
   } else if (!hashValidation.maxLength(value)) {
-    target.setCustomValidity(hashErrorMessages.maxLength());
+    target.setCustomValidity(hashErrorMessages.maxLength);
   } else if (!hashValidation.noDouble(value)) {
-    target.setCustomValidity(hashErrorMessages.noDouble());
+    target.setCustomValidity(hashErrorMessages.noDouble);
   } else {
     target.setCustomValidity('');
   }
