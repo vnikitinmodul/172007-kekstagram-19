@@ -229,6 +229,7 @@ var effectsRadio = document.querySelectorAll('.effects__radio');
 var uploadSelectImage = document.querySelector('#upload-select-image');
 var textHahtags = document.querySelector('.text__hashtags');
 var socialFooterText = document.querySelector('.social__footer-text');
+var textDescription = document.querySelector('.text__description');
 
 
 // Функции
@@ -413,7 +414,7 @@ var onSetupCloseClick = function () {
 };
 
 var onSetupEscPress = function (evt) {
-  if (evt.key === Keys.ESC && evt.target && evt.target !== textHahtags) {
+  if (evt.key === Keys.ESC && evt.target && evt.target !== textHahtags && evt.target !== textDescription) {
     closeUploadForm();
   }
 };
