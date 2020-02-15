@@ -224,9 +224,11 @@ var socialComments = document.querySelector('.social__comments');
 var bodyBlock = document.querySelector('body');
 var uploadFile = document.querySelector('#upload-file');
 var uploadCancel = document.querySelector('#upload-cancel');
+var pictureCancel = document.querySelector('#picture-cancel');
 var effectsRadio = document.querySelectorAll('.effects__radio');
 var uploadSelectImage = document.querySelector('#upload-select-image');
 var textHahtags = document.querySelector('.text__hashtags');
+var socialFooterText = document.querySelector('.social__footer-text');
 
 
 // Функции
@@ -269,7 +271,24 @@ var renderPhoto = function (template, item) {
   template.querySelector('.picture__likes').textContent = item.likes;
   template.querySelector('.picture__comments').textContent = item.comments.length;
 
+  template.addEventListener('click', function () {
+    showPicture(item);
+  });
+
+  template.addEventListener('keydown', function (evt) {
+    if (evt.key === Keys.ENTER) {
+      showPicture(item);
+    }
+  });
+
   return template;
+};
+
+var showPicture = function (data) {
+  setPictureData(data);
+  clearComments();
+  putComments(data, renderComment());
+  showPhotoModal();
 };
 
 var clonePhotos = function (data) {
@@ -289,10 +308,10 @@ var setPictureData = function (data) {
   var pictureComments = document.querySelector('.comments-count');
   var socialCaption = document.querySelector('.social__caption');
 
-  pictureImage.src = data[0].url;
-  pictureLikes.textContent = data[0].likes;
-  pictureComments.textContent = data[0].comments;
-  socialCaption.textContent = data[0].description;
+  pictureImage.src = data.url;
+  pictureLikes.textContent = data.likes;
+  pictureComments.textContent = data.comments;
+  socialCaption.textContent = data.description;
 };
 
 var switchBodyModalMode = function (hide) {
@@ -303,15 +322,19 @@ var switchBodyModalMode = function (hide) {
   }
 };
 
-// var showPhotoModal = function () {
-//   switchBodyModalMode();
-//   utils.showBlock('.big-picture');
-// };
+var showPhotoModal = function () {
+  document.addEventListener('keydown', onPictureEscPress);
+  pictureCancel.addEventListener('click', onPictureCloseClick);
+  switchBodyModalMode();
+  utils.showBlock('.big-picture');
+};
 
-// var hidePhotoModal = function () {
-//   switchBodyModalMode(true);
-//   utils.hideBlock('.big-picture');
-// };
+var hidePhotoModal = function () {
+  document.removeEventListener('keydown', onPictureEscPress);
+  pictureCancel.removeEventListener('click', onPictureCloseClick);
+  switchBodyModalMode(true);
+  utils.hideBlock('.big-picture');
+};
 
 var clearComments = function () {
   var currentComments = socialComments.querySelectorAll('.social__comment');
@@ -340,7 +363,7 @@ var renderComment = function () {
 };
 
 var putComments = function (data, template) {
-  var commentsArray = data[0].comments;
+  var commentsArray = data.comments;
 
   for (var l = 0; l < commentsArray.length; l++) {
     var currentCommentDOM = template.cloneNode(true);
@@ -358,7 +381,8 @@ var closeUploadForm = function () {
   switchBodyModalMode(true);
   utils.hideBlock('.img-upload__overlay');
   uploadFile.value = '';
-  document.removeEventListener('keydown', onPopupEscPress);
+  document.removeEventListener('keydown', onSetupEscPress);
+  uploadCancel.removeEventListener('click', onSetupCloseClick);
   UploadedImageControls.scaleControlSmaller.removeEventListener('click', onScaleControlSmallerClick);
   UploadedImageControls.scaleControlBigger.removeEventListener('click', onScaleControlBiggerClick);
   for (var m = 0; m < effectsRadio.length; m++) {
@@ -374,7 +398,9 @@ var onUploadFileChange = function () {
   utils.showBlock('.img-upload__overlay');
   uploadedImage.setSize(uploadedImage.getDefaultSize());
   uploadedImage.setEffectValue(uploadedImage.getDefaultEffectValue());
-  document.addEventListener('keydown', onPopupEscPress);
+
+  document.addEventListener('keydown', onSetupEscPress);
+  uploadCancel.addEventListener('click', onSetupCloseClick);
   UploadedImageControls.scaleControlSmaller.addEventListener('click', onScaleControlSmallerClick);
   UploadedImageControls.scaleControlBigger.addEventListener('click', onScaleControlBiggerClick);
   for (var m = 0; m < effectsRadio.length; m++) {
@@ -386,9 +412,19 @@ var onSetupCloseClick = function () {
   closeUploadForm();
 };
 
-var onPopupEscPress = function (evt) {
+var onSetupEscPress = function (evt) {
   if (evt.key === Keys.ESC && evt.target && evt.target !== textHahtags) {
     closeUploadForm();
+  }
+};
+
+var onPictureCloseClick = function () {
+  hidePhotoModal();
+};
+
+var onPictureEscPress = function (evt) {
+  if (evt.key === Keys.ESC && evt.target && evt.target !== socialFooterText) {
+    hidePhotoModal();
   }
 };
 
@@ -452,8 +488,6 @@ var onTextHahtagsInput = function (evt) {
 
 uploadFile.addEventListener('change', onUploadFileChange);
 
-uploadCancel.addEventListener('click', onSetupCloseClick);
-
 UploadedImageControls.effectLevelPin.addEventListener('mousedown', onEffectLevelPinMousedown);
 
 uploadSelectImage.addEventListener('submit', onUploadSelectImageSubmit);
@@ -466,12 +500,6 @@ textHahtags.addEventListener('input', onTextHahtagsInput);
 var photosData = generateData(PHOTOS_NUM);
 
 clonePhotos(photosData);
-
-setPictureData(photosData);
-
-clearComments();
-
-putComments(photosData, renderComment());
 
 utils.hideBlock('.social__comment-count');
 
