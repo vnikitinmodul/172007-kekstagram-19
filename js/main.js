@@ -42,7 +42,7 @@ var NAMES = [
   'Женя'
 ];
 
-var Keys = {
+var Key = {
   ESC: 'Escape',
   ENTER: 'Enter'
 };
@@ -408,7 +408,7 @@ var onSetupCloseClick = function () {
 };
 
 var onSetupEscPress = function (evt) {
-  if (evt.key === Keys.ESC && evt.target && evt.target !== textHahtags && evt.target !== textDescription) {
+  if (evt.key === Key.ESC && evt.target && evt.target !== textHahtags && evt.target !== textDescription) {
     closeUploadForm();
   }
 };
@@ -418,7 +418,7 @@ var onPictureCloseClick = function () {
 };
 
 var onPictureEscPress = function (evt) {
-  if (evt.key === Keys.ESC && evt.target && evt.target !== socialFooterText) {
+  if (evt.key === Key.ESC && evt.target && evt.target !== socialFooterText) {
     hidePhotoModal();
   }
 };
