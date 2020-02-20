@@ -47,7 +47,7 @@ var Keys = {
   ENTER: 'Enter'
 };
 
-var utils = {
+var util = {
   getRandomNum: function (min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   },
@@ -84,7 +84,7 @@ var utils = {
   }
 };
 
-var UploadedImageControls = {
+var UploadedImageControl = {
   scaleControlSmaller: document.querySelector('.scale__control--smaller'),
   scaleControlBigger: document.querySelector('.scale__control--bigger'),
   effectLevelPin: document.querySelector('.effect-level__pin'),
@@ -131,8 +131,8 @@ var uploadedImage = {
   },
   setEffectValue: function (value) {
     this.effectValue = value;
-    UploadedImageControls.effectLevelPin.style.left = value + '%';
-    UploadedImageControls.effectLevelDepth.style.width = value + '%';
+    UploadedImageControl.effectLevelPin.style.left = value + '%';
+    UploadedImageControl.effectLevelDepth.style.width = value + '%';
   },
   setSizeSmaller: function () {
     if (this.size > this.SIZE_MIN) {
@@ -162,7 +162,7 @@ var HashParam = {
 
 var hashValidation = {
   checkHashes: function (value, condition) {
-    var hashArray = utils.arrayToLowerCase(utils.cutSymbols(HashParam.SEPARATION_SYMBOL, value).split(HashParam.SEPARATION_SYMBOL));
+    var hashArray = util.arrayToLowerCase(util.cutSymbols(HashParam.SEPARATION_SYMBOL, value).split(HashParam.SEPARATION_SYMBOL));
     for (var c = 0; c < hashArray.length; c++) {
       if (condition(hashArray[c], hashArray)) {
         return false;
@@ -184,7 +184,7 @@ var hashValidation = {
     return this.checkHashes(value, this.hasSeparationCondition);
   },
   hasSeparationCondition: function (item) {
-    return utils.isStringInString(HashParam.START_SYMBOL, item.slice(HashParam.START_SYMBOL.length));
+    return util.isStringInString(HashParam.START_SYMBOL, item.slice(HashParam.START_SYMBOL.length));
   },
   maxCount: function (value) {
     var regMaxCount = new RegExp(HashParam.START_SYMBOL, 'g');
@@ -210,7 +210,7 @@ var hashValidation = {
   }
 };
 
-var hashErrorMessages = {
+var hashErrorMessage = {
   symbols: 'Хэштег может содержать только буквы и цифры',
   hasStart: 'Хэштег должен начинаться с символа ' + HashParam.START_SYMBOL,
   hasSeparation: 'Хэштеги должны быть разделены пробелом',
@@ -237,11 +237,11 @@ var textDescription = document.querySelector('.text__description');
 var getComments = function () {
   var commentsArray = [];
 
-  for (var i = 0; i < utils.getRandomNum(CommentsNum.MIN, CommentsNum.MAX); i++) {
+  for (var i = 0; i < util.getRandomNum(CommentsNum.MIN, CommentsNum.MAX); i++) {
     var currentComment = {
-      avatar: 'img/avatar-' + utils.getRandomNum(AvatarsNum.MIN, AvatarsNum.MAX) + '.svg',
-      message: COMMENTS[utils.getRandomNum(0, COMMENTS.length - 1)],
-      name: NAMES[utils.getRandomNum(0, NAMES.length - 1)]
+      avatar: 'img/avatar-' + util.getRandomNum(AvatarsNum.MIN, AvatarsNum.MAX) + '.svg',
+      message: COMMENTS[util.getRandomNum(0, COMMENTS.length - 1)],
+      name: NAMES[util.getRandomNum(0, NAMES.length - 1)]
     };
 
     commentsArray.push(currentComment);
@@ -257,7 +257,7 @@ var generateData = function (num) {
     var item = {
       url: 'photos/' + (j + 1) + '.jpg',
       description: 'Некое фото',
-      likes: utils.getRandomNum(LikesNum.MIN, LikesNum.MAX),
+      likes: util.getRandomNum(LikesNum.MIN, LikesNum.MAX),
       comments: getComments()
     };
 
@@ -274,12 +274,6 @@ var renderPhoto = function (template, item) {
 
   template.addEventListener('click', function () {
     showPicture(item);
-  });
-
-  template.addEventListener('keydown', function (evt) {
-    if (evt.key === Keys.ENTER) {
-      showPicture(item);
-    }
   });
 
   return template;
@@ -327,14 +321,14 @@ var showPhotoModal = function () {
   document.addEventListener('keydown', onPictureEscPress);
   pictureCancel.addEventListener('click', onPictureCloseClick);
   switchBodyModalMode();
-  utils.showBlock('.big-picture');
+  util.showBlock('.big-picture');
 };
 
 var hidePhotoModal = function () {
   document.removeEventListener('keydown', onPictureEscPress);
   pictureCancel.removeEventListener('click', onPictureCloseClick);
   switchBodyModalMode(true);
-  utils.hideBlock('.big-picture');
+  util.hideBlock('.big-picture');
 };
 
 var clearComments = function () {
@@ -380,12 +374,12 @@ var putComments = function (data, template) {
 
 var closeUploadForm = function () {
   switchBodyModalMode(true);
-  utils.hideBlock('.img-upload__overlay');
+  util.hideBlock('.img-upload__overlay');
   uploadFile.value = '';
   document.removeEventListener('keydown', onSetupEscPress);
   uploadCancel.removeEventListener('click', onSetupCloseClick);
-  UploadedImageControls.scaleControlSmaller.removeEventListener('click', onScaleControlSmallerClick);
-  UploadedImageControls.scaleControlBigger.removeEventListener('click', onScaleControlBiggerClick);
+  UploadedImageControl.scaleControlSmaller.removeEventListener('click', onScaleControlSmallerClick);
+  UploadedImageControl.scaleControlBigger.removeEventListener('click', onScaleControlBiggerClick);
   for (var m = 0; m < effectsRadio.length; m++) {
     effectsRadio[m].removeEventListener('change', onEffectsChange);
   }
@@ -396,14 +390,14 @@ var closeUploadForm = function () {
 
 var onUploadFileChange = function () {
   switchBodyModalMode();
-  utils.showBlock('.img-upload__overlay');
+  util.showBlock('.img-upload__overlay');
   uploadedImage.setSize(uploadedImage.getDefaultSize());
   uploadedImage.setEffectValue(uploadedImage.getDefaultEffectValue());
 
   document.addEventListener('keydown', onSetupEscPress);
   uploadCancel.addEventListener('click', onSetupCloseClick);
-  UploadedImageControls.scaleControlSmaller.addEventListener('click', onScaleControlSmallerClick);
-  UploadedImageControls.scaleControlBigger.addEventListener('click', onScaleControlBiggerClick);
+  UploadedImageControl.scaleControlSmaller.addEventListener('click', onScaleControlSmallerClick);
+  UploadedImageControl.scaleControlBigger.addEventListener('click', onScaleControlBiggerClick);
   for (var m = 0; m < effectsRadio.length; m++) {
     effectsRadio[m].addEventListener('change', onEffectsChange);
   }
@@ -442,8 +436,8 @@ var onEffectsChange = function (evt) {
 };
 
 var onEffectLevelPinMousedown = function () {
-  UploadedImageControls.effectLevelPin.addEventListener('mousemove', onEffectLevelPinMousemove);
-  UploadedImageControls.effectLevelPin.addEventListener('mouseup', onEffectLevelPinMouseup);
+  UploadedImageControl.effectLevelPin.addEventListener('mousemove', onEffectLevelPinMousemove);
+  UploadedImageControl.effectLevelPin.addEventListener('mouseup', onEffectLevelPinMouseup);
 };
 
 var onEffectLevelPinMousemove = function () {
@@ -451,8 +445,8 @@ var onEffectLevelPinMousemove = function () {
 };
 
 var onEffectLevelPinMouseup = function () {
-  UploadedImageControls.effectLevelPin.removeEventListener('mousemove', onEffectLevelPinMousemove);
-  UploadedImageControls.effectLevelPin.removeEventListener('mouseup', onEffectLevelPinMouseup);
+  UploadedImageControl.effectLevelPin.removeEventListener('mousemove', onEffectLevelPinMousemove);
+  UploadedImageControl.effectLevelPin.removeEventListener('mouseup', onEffectLevelPinMouseup);
 };
 
 var onUploadSelectImageSubmit = function () {
@@ -466,19 +460,19 @@ var onTextHahtagsInput = function (evt) {
   if (!value) {
     target.setCustomValidity('');
   } else if (!hashValidation.symbols(value)) {
-    target.setCustomValidity(hashErrorMessages.symbols);
+    target.setCustomValidity(hashErrorMessage.symbols);
   } else if (!hashValidation.hasStart(value)) {
-    target.setCustomValidity(hashErrorMessages.hasStart);
+    target.setCustomValidity(hashErrorMessage.hasStart);
   } else if (!hashValidation.hasSeparation(value)) {
-    target.setCustomValidity(hashErrorMessages.hasSeparation);
+    target.setCustomValidity(hashErrorMessage.hasSeparation);
   } else if (!hashValidation.maxCount(value)) {
-    target.setCustomValidity(hashErrorMessages.maxCount);
+    target.setCustomValidity(hashErrorMessage.maxCount);
   } else if (!hashValidation.minLength(value)) {
-    target.setCustomValidity(hashErrorMessages.minLength);
+    target.setCustomValidity(hashErrorMessage.minLength);
   } else if (!hashValidation.maxLength(value)) {
-    target.setCustomValidity(hashErrorMessages.maxLength);
+    target.setCustomValidity(hashErrorMessage.maxLength);
   } else if (!hashValidation.noDouble(value)) {
-    target.setCustomValidity(hashErrorMessages.noDouble);
+    target.setCustomValidity(hashErrorMessage.noDouble);
   } else {
     target.setCustomValidity('');
   }
@@ -489,7 +483,7 @@ var onTextHahtagsInput = function (evt) {
 
 uploadFile.addEventListener('change', onUploadFileChange);
 
-UploadedImageControls.effectLevelPin.addEventListener('mousedown', onEffectLevelPinMousedown);
+UploadedImageControl.effectLevelPin.addEventListener('mousedown', onEffectLevelPinMousedown);
 
 uploadSelectImage.addEventListener('submit', onUploadSelectImageSubmit);
 
@@ -502,6 +496,6 @@ var photosData = generateData(PHOTOS_NUM);
 
 clonePhotos(photosData);
 
-utils.hideBlock('.social__comment-count');
+util.hideBlock('.social__comment-count');
 
-utils.hideBlock('.comments-loader');
+util.hideBlock('.comments-loader');
