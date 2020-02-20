@@ -62,7 +62,7 @@ var util = {
     block.classList.add('hidden');
   },
   isStringInString: function (value, text) {
-    return ~text.indexOf(value);
+    return text.indexOf(value) !== -1;
   },
   cutSymbols: function (symbols, value) {
     var valueArray = value.split(symbols);
@@ -172,7 +172,7 @@ var hashValidation = {
   },
   symbols: function (value) {
     var regSymbols = new RegExp('[^A-Za-zА-Яа-я0-9' + HashParam.SEPARATION_SYMBOL + HashParam.START_SYMBOL + ']');
-    return !~value.search(regSymbols);
+    return value.search(regSymbols) === -1;
   },
   hasStart: function (value) {
     return this.checkHashes(value, this.hasStartCondition);
@@ -206,7 +206,7 @@ var hashValidation = {
     return this.checkHashes(value, this.noDoubleCondition);
   },
   noDoubleCondition: function (item, array) {
-    return ~array.indexOf(item, array.indexOf(item) + 1);
+    return array.indexOf(item, array.indexOf(item) + 1) !== -1;
   }
 };
 
