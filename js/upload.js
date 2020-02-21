@@ -37,7 +37,7 @@
       // uploadedImageEffect = filter;
       this.setEffectValue(DEFAULT_EFFECT_VALUE);
       uploadPreviewImage.className = '';
-      if (filter !== 'none') {
+      if (filter !== DEFAULT_EFFECT) {
         uploadPreviewImage.classList.add('effects__preview--' + filter);
       }
     },
