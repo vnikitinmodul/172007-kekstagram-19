@@ -16,7 +16,7 @@
   // var effectLevelValue = document.querySelector('.effect-level__value');
 
   var DEFAULT_SIZE_VALUE = 100;
-  // var DEFAULT_EFFECT = 'none';
+  var DEFAULT_EFFECT = 'none';
   var DEFAULT_EFFECT_VALUE = 100;
   // var DEFAULT_FILTER = '';
   var uploadedImageSize = DEFAULT_SIZE_VALUE;
@@ -35,9 +35,11 @@
     },
     setEffect: function (filter) {
       // uploadedImageEffect = filter;
-      this.setEffectValue(this.DEFAULT_EFFECT_VALUE);
+      this.setEffectValue(DEFAULT_EFFECT_VALUE);
       uploadPreviewImage.className = '';
-      uploadPreviewImage.classList.add('effects__preview--' + filter);
+      if (filter !== 'none') {
+        uploadPreviewImage.classList.add('effects__preview--' + filter);
+      }
     },
     setEffectValue: function (value) {
       // uploadedImageEffectValue = value;
@@ -80,6 +82,7 @@
     window.util.switchBodyModalMode();
     window.util.showBlock('.img-upload__overlay');
     uploadedImage.setSize(DEFAULT_SIZE_VALUE);
+    uploadedImage.setEffect(DEFAULT_EFFECT);
     uploadedImage.setEffectValue(DEFAULT_EFFECT_VALUE);
 
     document.addEventListener('keydown', onSetupEscPress);
