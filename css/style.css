@@ -536,6 +536,8 @@ main {
   height: 600px;
 
   background-color: #ffffff;
+
+	user-select: none;
 }
 
 .img-upload__preview img {
