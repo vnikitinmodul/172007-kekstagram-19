@@ -130,7 +130,9 @@
     scaleControlSmaller.removeEventListener('click', onScaleControlSmallerClick);
     scaleControlBigger.removeEventListener('click', onScaleControlBiggerClick);
     for (var m = 0; m < effectsRadio.length; m++) {
-      effectsRadio[m].removeEventListener('change', onEffectChange);
+      effectsRadio.forEach(function (item) {
+        item.removeEventListener('change', onEffectChange);
+      });
     }
   };
 
@@ -159,9 +161,9 @@
     uploadCancel.addEventListener('click', onSetupCloseClick);
     scaleControlSmaller.addEventListener('click', onScaleControlSmallerClick);
     scaleControlBigger.addEventListener('click', onScaleControlBiggerClick);
-    for (var m = 0; m < effectsRadio.length; m++) {
-      effectsRadio[m].addEventListener('change', onEffectChange);
-    }
+    effectsRadio.forEach(function (item) {
+      item.addEventListener('change', onEffectChange);
+    });
   };
 
   var onSetupCloseClick = function () {
