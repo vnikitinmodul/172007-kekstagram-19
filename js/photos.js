@@ -1,20 +1,13 @@
 'use strict';
 
 (function () {
-  var PHOTOS_NUM = 25;
-
-  var LikesNum = {
-    MIN: 15,
-    MAX: 200
-  };
-
   var renderPhoto = function (template, item) {
     template.querySelector('.picture__img').src = item.url;
     template.querySelector('.picture__likes').textContent = item.likes;
     template.querySelector('.picture__comments').textContent = item.comments.length;
 
     template.addEventListener('click', function () {
-      window.picture.showPicture(item);
+      window.picture.show(item);
     });
 
     return template;
@@ -50,7 +43,7 @@
       var item = {
         url: 'photos/' + (j + 1) + '.jpg',
         description: 'Некое фото',
-        likes: window.util.getRandomNum(LikesNum.MIN, LikesNum.MAX),
+        likes: window.util.getRandomNum(window.mockData.LikesNum.MIN, window.mockData.LikesNum.MAX),
         comments: window.comments.get()
       };
 
@@ -60,7 +53,7 @@
     return data;
   };
 
-  var photosData = generateData(PHOTOS_NUM);
+  var photosData = generateData(window.mockData.PHOTOS_NUM);
 
   clonePhotos(photosData);
 
