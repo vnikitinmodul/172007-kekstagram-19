@@ -9,7 +9,7 @@
     template.querySelector('.picture__comments').textContent = item.comments.length;
 
     template.addEventListener('click', function () {
-      window.picture.showPicture(item);
+      window.picture.show(item);
     });
 
     return template;

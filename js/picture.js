@@ -36,7 +36,7 @@
   };
 
   window.picture = {
-    showPicture: showPicture
+    show: showPicture
   };
 
 }());
