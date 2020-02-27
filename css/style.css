@@ -1445,3 +1445,18 @@ main {
     grid-row: 1 / span 3;
   }
 }
+
+.error-notify {
+  position: absolute;
+  z-index: 100;
+  top: 50px;
+  left: 50px;
+
+  padding: 20px;
+
+  font-size: 18px;
+
+  background-color: red;
+
+  border: 2px solid #fff;
+}

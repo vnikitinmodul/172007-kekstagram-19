@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var URL_PHOTOS = 'https://js.dump.academy/kekstagram/data';
+
   var renderPhoto = function (template, item) {
     template.querySelector('.picture__img').src = item.url;
     template.querySelector('.picture__likes').textContent = item.likes;
@@ -36,26 +38,13 @@
     socialCaption.textContent = data.description;
   };
 
-  var generateData = function (num) {
-    var data = [];
 
-    for (var j = 0; j < num; j++) {
-      var item = {
-        url: 'photos/' + (j + 1) + '.jpg',
-        description: 'Некое фото',
-        likes: window.util.getRandomNum(window.mockData.LikesNum.MIN, window.mockData.LikesNum.MAX),
-        comments: window.comments.get()
-      };
-
-      data.push(item);
-    }
-
-    return data;
+  var onStatusError = function (status) {
+    window.util.showError(status);
   };
 
-  var photosData = generateData(window.mockData.PHOTOS_NUM);
-
-  clonePhotos(photosData);
+  // clonePhotos(photosData);
+  window.backend.load(URL_PHOTOS, clonePhotos, onStatusError);
 
   window.photos = {
     setPictureData: setPictureData

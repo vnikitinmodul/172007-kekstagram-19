@@ -1,6 +1,11 @@
 'use strict';
 
 (function () {
+  var ErrorParam = {
+    TIMEOUT: 5000,
+    CLASS: 'error-notify'
+  };
+
   var bodyBlock = document.querySelector('body');
 
   window.util = {
@@ -48,6 +53,16 @@
       } else {
         bodyBlock.classList.add('modal-open');
       }
+    },
+    showError: function (text) {
+      var errorBlock = document.createElement('div');
+
+      errorBlock.classList.add(ErrorParam.CLASS);
+      errorBlock.textContent = text;
+      document.querySelector('body').appendChild(errorBlock);
+      setTimeout(function () {
+        errorBlock.remove();
+      }, ErrorParam.TIMEOUT);
     }
   };
 }());
