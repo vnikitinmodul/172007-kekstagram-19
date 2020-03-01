@@ -223,6 +223,8 @@
   };
 
   var onUploadFileChange = function () {
+    uploadFile.blur();
+
     if (uploadFile.files && uploadFile.files[0]) {
       renderPreview(uploadFile, uploadPreviewImage, onReaderLoaded);
     }
@@ -240,7 +242,7 @@
     img.src = result;
     window.util.switchBodyModalMode();
     window.util.showBlock('.img-upload__overlay');
-    uploadSubmit.focus();
+    // uploadSubmit.focus();
     uploadedImage.setSize(DEFAULT_SIZE_VALUE);
     uploadedImage.setEffect(DEFAULT_EFFECT);
     uploadedImage.setEffectValue(DEFAULT_EFFECT_VALUE, true);
