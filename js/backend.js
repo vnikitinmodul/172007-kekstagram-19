@@ -2,10 +2,7 @@
 
 (function () {
   var XHR_TIMEOUT = 10000;
-  var StatusCode = {
-    SUCCESS: 200,
-    NOT_FOUND: 404
-  };
+  var STATUS_SUCCESS = 200;
   var StatusMessage = {
     STATUS: 'Статус ответа: ',
     SYNTAX_ERROR: 'Синтаксическая ошибка',
@@ -18,7 +15,7 @@
       var xhr = new XMLHttpRequest();
 
       xhr.addEventListener('load', function () {
-        if (xhr.status === StatusCode.SUCCESS) {
+        if (xhr.status === STATUS_SUCCESS) {
           try {
             JSON.parse(xhr.responseText);
           } catch (e) {
