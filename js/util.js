@@ -6,7 +6,10 @@
     CLASS: 'error-notify'
   };
 
+  var DEBOUNCE_INTERVAL = 500;
+
   var bodyBlock = document.querySelector('body');
+  var lastTimeout;
 
   window.util = {
     Key: {
@@ -63,6 +66,12 @@
       setTimeout(function () {
         errorBlock.remove();
       }, ErrorParam.TIMEOUT);
+    },
+    debounce: function (callback) {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(callback, DEBOUNCE_INTERVAL);
     }
   };
 }());
