@@ -3,6 +3,7 @@
 (function () {
   var pictureCancel = document.querySelector('#picture-cancel');
   var socialFooterText = document.querySelector('.social__footer-text');
+  var socialCommentsLoader = document.querySelector('.social__comments-loader');
 
   var showPhotoModal = function () {
     document.addEventListener('keydown', onPictureEscPress);
@@ -14,6 +15,8 @@
   var hidePhotoModal = function () {
     document.removeEventListener('keydown', onPictureEscPress);
     pictureCancel.removeEventListener('click', onPictureCloseClick);
+    socialCommentsLoader.removeEventListener('click', window.comments.onLoaderClick);
+    window.comments.reset();
     window.util.switchBodyModalMode(true);
     window.util.hideBlock('.big-picture');
   };
@@ -22,6 +25,7 @@
     window.photos.setPictureData(data);
     window.comments.clear();
     window.comments.put(data, window.comments.render());
+
     showPhotoModal();
   };
 

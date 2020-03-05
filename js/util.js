@@ -11,6 +11,10 @@
   var bodyBlock = document.querySelector('body');
   var lastTimeout;
 
+  var getBlock = function (selector) {
+    return typeof selector === 'string' ? document.querySelector(selector) : selector;
+  };
+
   window.util = {
     Key: {
       ESC: 'Escape',
@@ -20,14 +24,10 @@
       return Math.floor(Math.random() * (max - min + 1) + min);
     },
     showBlock: function (selector) {
-      var block = document.querySelector(selector);
-
-      block.classList.remove('hidden');
+      getBlock(selector).classList.remove('hidden');
     },
     hideBlock: function (selector) {
-      var block = document.querySelector(selector);
-
-      block.classList.add('hidden');
+      getBlock(selector).classList.add('hidden');
     },
     isStringInString: function (value, text) {
       return text.indexOf(value) !== -1;
