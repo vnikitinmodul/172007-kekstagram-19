@@ -9,16 +9,12 @@
   var SIZE_MIN = 25;
   var SIZE_MAX = 100;
   var SLIDER_SCALE = 100;
-  // var DEFAULT_FILTER = '';
 
   var uploadedImageSize = DEFAULT_SIZE_VALUE;
   var uploadedImageEffect = DEFAULT_EFFECT;
-  // var uploadedImageEffectValue = DEFAULT_EFFECT_VALUE;
-  // var uploadedImageFilter = DEFAULT_FILTER;
 
   var uploadFile = document.querySelector('#upload-file');
   var uploadCancel = document.querySelector('#upload-cancel');
-  var uploadSubmit = document.querySelector('#upload-submit');
   var uploadSelectImage = document.querySelector('#upload-select-image');
   var effectsRadio = document.querySelectorAll('.effects__radio');
   var textDescription = document.querySelector('.text__description');
@@ -183,9 +179,9 @@
   var renderPreview = function (input, img, onLoad) {
     var reader = new FileReader();
 
-    reader.onload = function (evt) {
+    reader.addEventListener('load', function (evt) {
       onLoad(img, evt.target.result);
-    };
+    });
 
     reader.readAsDataURL(uploadFile.files[0]);
   };
@@ -242,7 +238,6 @@
     img.src = result;
     window.util.switchBodyModalMode();
     window.util.showBlock('.img-upload__overlay');
-    // uploadSubmit.focus();
     uploadedImage.setSize(DEFAULT_SIZE_VALUE);
     uploadedImage.setEffect(DEFAULT_EFFECT);
     uploadedImage.setEffectValue(DEFAULT_EFFECT_VALUE, true);

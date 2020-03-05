@@ -767,6 +767,10 @@ main {
   border-radius: 5px;
 }
 
+.text__hashtags:invalid {
+	border: 2px solid red;
+}
+
 
 /**
  * Кнопка для отправки изображения
