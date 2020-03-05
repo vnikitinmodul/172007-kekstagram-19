@@ -84,12 +84,10 @@
   var setPictureData = function (data) {
     var pictureImage = document.querySelector('.big-picture__img img');
     var pictureLikes = document.querySelector('.likes-count');
-    var pictureComments = document.querySelector('.comments-count');
     var socialCaption = document.querySelector('.social__caption');
 
     pictureImage.src = data.url;
     pictureLikes.textContent = data.likes;
-    pictureComments.textContent = data.comments;
     socialCaption.textContent = data.description;
   };
 
