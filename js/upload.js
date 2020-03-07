@@ -127,19 +127,19 @@
   var closeUploadForm = function () {
     window.util.switchBodyModalMode(true);
     window.util.hideBlock('.img-upload__overlay');
-    uploadFile.value = '';
-    textHahtags.value = '';
-    textDescription.value = '';
-    document.querySelector('#effect-none').checked = true;
+    uploadSelectImage.reset();
+    // uploadFile.value = '';
+    // textHahtags.value = '';
+    textHahtags.setCustomValidity('');
+    // textDescription.value = '';
+    // document.querySelector('#effect-none').checked = true;
     document.removeEventListener('keydown', onSetupEscPress);
     uploadCancel.removeEventListener('click', onSetupCloseClick);
     scaleControlSmaller.removeEventListener('click', onScaleControlSmallerClick);
     scaleControlBigger.removeEventListener('click', onScaleControlBiggerClick);
-    for (var m = 0; m < effectsRadio.length; m++) {
-      effectsRadio.forEach(function (item) {
-        item.removeEventListener('change', onEffectChange);
-      });
-    }
+    effectsRadio.forEach(function (item) {
+      item.removeEventListener('change', onEffectChange);
+    });
   };
 
   var calculateSliderValue = function (value, scale, maxValue) {
