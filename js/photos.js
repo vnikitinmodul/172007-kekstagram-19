@@ -138,7 +138,6 @@
     item.addEventListener('click', onImgFiltersButtonsClick);
   });
 
-  // clonePhotos(photosData);
   window.backend.load(URL_PHOTOS, loadPhotos, onStatusError);
 
   window.photos = {

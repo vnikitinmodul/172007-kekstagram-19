@@ -128,11 +128,7 @@
     window.util.switchBodyModalMode(true);
     window.util.hideBlock('.img-upload__overlay');
     uploadSelectImage.reset();
-    // uploadFile.value = '';
-    // textHahtags.value = '';
     textHahtags.setCustomValidity('');
-    // textDescription.value = '';
-    // document.querySelector('#effect-none').checked = true;
     document.removeEventListener('keydown', onSetupEscPress);
     uploadCancel.removeEventListener('click', onSetupCloseClick);
     scaleControlSmaller.removeEventListener('click', onScaleControlSmallerClick);
