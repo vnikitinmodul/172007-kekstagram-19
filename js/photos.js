@@ -4,9 +4,10 @@
   var URL_PHOTOS = 'https://js.dump.academy/kekstagram/data';
   var RANDOM_PHOTOS_NUM = 10;
   var BUTTON_ACTIVE_CLASS = 'img-filters__button--active';
+  var PICTURE_CLASS = '.picture';
 
-  var imgFilters = document.querySelector('.img-filters');
-  var imgFiltersButtons = imgFilters.querySelectorAll('.img-filters__button');
+  var imgFiltersElement = document.querySelector('.img-filters');
+  var imgFiltersButtonElements = imgFiltersElement.querySelectorAll('.img-filters__button');
   var startData = [];
 
   var filters = {
@@ -29,9 +30,8 @@
           return 1;
         } else if (a.comments.length > b.comments.length) {
           return -1;
-        } else {
-          return 0;
         }
+        return 0;
       });
       return resultArray;
     }
@@ -40,7 +40,7 @@
   var loadPhotos = function (data) {
     startData = data;
     appendPhotos(filterPhotos(startData));
-    imgFilters.classList.remove('img-filters--inactive');
+    imgFiltersElement.classList.remove('img-filters--inactive');
   };
 
   var renderPhoto = function (template, item) {
@@ -56,16 +56,16 @@
   };
 
   var appendPhotos = function (data) {
-    var templatePicture = document.querySelector('#picture').content.querySelector('.picture');
+    var templatePictureElement = document.querySelector('#picture').content.querySelector(PICTURE_CLASS);
     var fragmentList = document.createDocumentFragment();
 
     data.forEach(function (item) {
-      var currentPicture = renderPhoto(templatePicture.cloneNode(true), item);
+      var currentPicture = renderPhoto(templatePictureElement.cloneNode(true), item);
 
       fragmentList.appendChild(currentPicture);
     });
 
-    document.querySelectorAll('.picture').forEach(function (item) {
+    document.querySelectorAll(PICTURE_CLASS).forEach(function (item) {
       item.remove();
     });
     document.querySelector('.pictures').appendChild(fragmentList);
@@ -82,13 +82,13 @@
   };
 
   var setPictureData = function (data) {
-    var pictureImage = document.querySelector('.big-picture__img img');
-    var pictureLikes = document.querySelector('.likes-count');
-    var socialCaption = document.querySelector('.social__caption');
+    var pictureImageElement = document.querySelector('.big-picture__img img');
+    var pictureLikesElement = document.querySelector('.likes-count');
+    var socialCaptionElement = document.querySelector('.social__caption');
 
-    pictureImage.src = data.url;
-    pictureLikes.textContent = data.likes;
-    socialCaption.textContent = data.description;
+    pictureImageElement.src = data.url;
+    pictureLikesElement.textContent = data.likes;
+    socialCaptionElement.textContent = data.description;
   };
 
   var onStatusError = function (status) {
@@ -106,10 +106,10 @@
     activeElement.classList.add(className);
   };
 
-  var onImgFiltersButtonsClick = function (evt) {
+  var onImgFiltersButtonClick = function (evt) {
     var button = evt.target;
     var filter = getThisFilter(button);
-    var currentFilter = getThisFilter(document.querySelector('.img-filters__button--active'));
+    var currentFilter = getThisFilter(document.querySelector('.' + BUTTON_ACTIVE_CLASS));
 
     if (currentFilter === filter) {
       return;
@@ -131,11 +131,11 @@
     window.util.debounce(function () {
       appendPhotos(filterPhotos(startData, filterMethod));
     });
-    switchClass(imgFiltersButtons, button, BUTTON_ACTIVE_CLASS);
+    switchClass(imgFiltersButtonElements, button, BUTTON_ACTIVE_CLASS);
   };
 
-  imgFiltersButtons.forEach(function (item) {
-    item.addEventListener('click', onImgFiltersButtonsClick);
+  imgFiltersButtonElements.forEach(function (item) {
+    item.addEventListener('click', onImgFiltersButtonClick);
   });
 
   window.backend.load(URL_PHOTOS, loadPhotos, onStatusError);

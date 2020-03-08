@@ -9,11 +9,11 @@
     MAX_LENGTH: 20
   };
 
-  var hashValidation = {
+  var validation = {
     checkHashes: function (value, condition) {
       var hashArray = window.util.arrayToLowerCase(window.util.cutSymbols(HashParam.SEPARATION_SYMBOL, value).split(HashParam.SEPARATION_SYMBOL));
-      for (var c = 0; c < hashArray.length; c++) {
-        if (condition(hashArray[c], hashArray)) {
+      for (var i = 0; i < hashArray.length; i++) {
+        if (condition(hashArray[i], hashArray)) {
           return false;
         }
       }
@@ -75,27 +75,27 @@
 
     if (!value) {
       target.setCustomValidity('');
-    } else if (!hashValidation.symbols(value)) {
+    } else if (!validation.symbols(value)) {
       target.setCustomValidity(hashErrorMessage.symbols);
-    } else if (!hashValidation.hasStart(value)) {
+    } else if (!validation.hasStart(value)) {
       target.setCustomValidity(hashErrorMessage.hasStart);
-    } else if (!hashValidation.hasSeparation(value)) {
+    } else if (!validation.hasSeparation(value)) {
       target.setCustomValidity(hashErrorMessage.hasSeparation);
-    } else if (!hashValidation.maxCount(value)) {
+    } else if (!validation.maxCount(value)) {
       target.setCustomValidity(hashErrorMessage.maxCount);
-    } else if (!hashValidation.minLength(value)) {
+    } else if (!validation.minLength(value)) {
       target.setCustomValidity(hashErrorMessage.minLength);
-    } else if (!hashValidation.maxLength(value)) {
+    } else if (!validation.maxLength(value)) {
       target.setCustomValidity(hashErrorMessage.maxLength);
-    } else if (!hashValidation.noDouble(value)) {
+    } else if (!validation.noDouble(value)) {
       target.setCustomValidity(hashErrorMessage.noDouble);
     } else {
       target.setCustomValidity('');
     }
   };
 
-  var textHahtags = document.querySelector('.text__hashtags');
+  var textHahtagsElement = document.querySelector('.text__hashtags');
 
-  textHahtags.addEventListener('input', onTextHahtagsInput);
+  textHahtagsElement.addEventListener('input', onTextHahtagsInput);
 
 }());

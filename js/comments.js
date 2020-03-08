@@ -3,34 +3,34 @@
 (function () {
   var COMMENT_IMG_SIZE = 35;
   var COMMENTS_CHUNK_NUM = 5;
+  var SOCIAL_COMMENT_CLASS = 'social__comment';
 
-  var socialComments = document.querySelector('.social__comments');
-  var socialCommentsLoader = document.querySelector('.social__comments-loader');
-  var commentsCount = document.querySelector('.comments-count');
-  var commentsCountAll = document.querySelector('.comments-count-all');
+  var socialCommentsElement = document.querySelector('.social__comments');
+  var socialCommentsLoaderElement = document.querySelector('.social__comments-loader');
+  var commentsCountElement = document.querySelector('.comments-count');
+  var commentsCountAllElement = document.querySelector('.comments-count-all');
   var currentTemplate;
   var loadedComments = 0;
   var currentData = [];
-  var isAllLoaded = false;
 
   var showCommentsNav = function () {
-    window.util.showBlock(socialCommentsLoader);
+    window.util.showBlock(socialCommentsLoaderElement);
 
     loadedComments += COMMENTS_CHUNK_NUM;
 
     if (loadedComments === COMMENTS_CHUNK_NUM) {
-      socialCommentsLoader.addEventListener('click', onCommentsLoaderClick);
+      socialCommentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
     }
   };
 
   var hideCommentsNav = function () {
-    window.util.hideBlock(socialCommentsLoader);
-    socialCommentsLoader.removeEventListener('click', onCommentsLoaderClick);
+    window.util.hideBlock(socialCommentsLoaderElement);
+    socialCommentsLoaderElement.removeEventListener('click', onCommentsLoaderClick);
   };
 
   var setCommentsNum = function (num) {
-    commentsCount.textContent = loadedComments;
-    commentsCountAll.textContent = num;
+    commentsCountElement.textContent = loadedComments;
+    commentsCountAllElement.textContent = num;
   };
 
   var checkIsAllLoaded = function (array) {
@@ -40,7 +40,13 @@
   var resetComments = function () {
     loadedComments = 0;
     currentData = [];
-    isAllLoaded = false;
+  };
+
+  var appendToFragment = function (template, templateList, data) {
+    template.querySelector('.social__picture').src = data.avatar;
+    template.querySelector('.social__picture').alt = data.name;
+    template.querySelector('.social__text').textContent = data.message;
+    templateList.appendChild(template);
   };
 
   var putComments = function (data, template) {
@@ -49,25 +55,18 @@
     var lastCommentNum;
     var fragmentList = document.createDocumentFragment();
 
-    isAllLoaded = checkIsAllLoaded(commentsArray);
     currentData = data;
     currentTemplate = template;
 
-    if (!isAllLoaded) {
+    if (!checkIsAllLoaded(commentsArray)) {
       firstCommentNum = loadedComments;
       lastCommentNum = commentsArray.length <= loadedComments + COMMENTS_CHUNK_NUM ? commentsArray.length : loadedComments + COMMENTS_CHUNK_NUM;
 
-      for (var l = firstCommentNum; l < lastCommentNum; l++) {
-        var currentCommentDOM = template.cloneNode(true);
-        var currentComment = commentsArray[l];
-
-        currentCommentDOM.querySelector('.social__picture').src = currentComment.avatar;
-        currentCommentDOM.querySelector('.social__picture').alt = currentComment.name;
-        currentCommentDOM.querySelector('.social__text').textContent = currentComment.message;
-        fragmentList.appendChild(currentCommentDOM);
+      for (var j = firstCommentNum; j < lastCommentNum; j++) {
+        appendToFragment(template.cloneNode(true), fragmentList, commentsArray[j]);
       }
 
-      socialComments.appendChild(fragmentList);
+      socialCommentsElement.appendChild(fragmentList);
     }
 
     if (commentsArray.length > loadedComments + COMMENTS_CHUNK_NUM) {
@@ -77,11 +76,9 @@
       loadedComments = commentsArray.length;
     }
 
-    isAllLoaded = checkIsAllLoaded(commentsArray);
-
     setCommentsNum(commentsArray.length);
 
-    if (isAllLoaded) {
+    if (checkIsAllLoaded(commentsArray)) {
       resetComments();
     }
   };
@@ -93,9 +90,9 @@
   window.comments = {
     DEFAULT_NUM: COMMENTS_CHUNK_NUM,
     clear: function () {
-      var startComments = socialComments.querySelectorAll('.social__comment');
+      var startCommentsElements = socialCommentsElement.querySelectorAll('.' + SOCIAL_COMMENT_CLASS);
 
-      startComments.forEach(function (item) {
+      startCommentsElements.forEach(function (item) {
         item.remove();
       });
     },
@@ -104,7 +101,7 @@
       var commentImg = document.createElement('img');
       var commentText = document.createElement('p');
 
-      commentTemplate.classList.add('social__comment');
+      commentTemplate.classList.add(SOCIAL_COMMENT_CLASS);
       commentImg.classList.add('social__picture');
       commentText.classList.add('social__text');
 
@@ -117,21 +114,6 @@
       return commentTemplate;
     },
     put: putComments,
-    get: function () {
-      var commentsArray = [];
-
-      for (var i = 0; i < window.util.getRandomNum(window.mockData.CommentsNum.MIN, window.mockData.CommentsNum.MAX); i++) {
-        var currentComment = {
-          avatar: 'img/avatar-' + window.util.getRandomNum(window.mockData.AvatarsNum.MIN, window.mockData.AvatarsNum.MAX) + '.svg',
-          message: window.mockData.COMMENTS[window.util.getRandomNum(0, window.mockData.COMMENTS.length - 1)],
-          name: window.mockData.NAMES[window.util.getRandomNum(0, window.mockData.NAMES.length - 1)]
-        };
-
-        commentsArray.push(currentComment);
-      }
-
-      return commentsArray;
-    },
     reset: resetComments,
     onLoaderClick: onCommentsLoaderClick
   };

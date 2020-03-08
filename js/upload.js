@@ -13,26 +13,28 @@
   var uploadedImageSize = DEFAULT_SIZE_VALUE;
   var uploadedImageEffect = DEFAULT_EFFECT;
 
-  var uploadFile = document.querySelector('#upload-file');
-  var uploadCancel = document.querySelector('#upload-cancel');
-  var uploadSelectImage = document.querySelector('#upload-select-image');
-  var effectsRadio = document.querySelectorAll('.effects__radio');
-  var textDescription = document.querySelector('.text__description');
-  var textHahtags = document.querySelector('.text__hashtags');
-  var scaleControlSmaller = document.querySelector('.scale__control--smaller');
-  var scaleControlBigger = document.querySelector('.scale__control--bigger');
-  var effectLevelPin = document.querySelector('.effect-level__pin');
-  var effectLevelLine = document.querySelector('.effect-level__line');
-  var effectLevelDepth = document.querySelector('.effect-level__depth');
-  var uploadPreviewImage = document.querySelector('.img-upload__preview img');
-  var scaleControlValue = document.querySelector('.scale__control--value');
-  var effectLevelValue = document.querySelector('.effect-level__value');
-  var successMessage = document.querySelector('#success').content.querySelector('.success');
-  var successButton = successMessage.querySelector('.success__button');
-  var errorMessage = document.querySelector('#error').content.querySelector('.error');
-  var errorButton = errorMessage.querySelector('.error__button');
+  var uploadFileElement = document.querySelector('#upload-file');
+  var uploadCancelElement = document.querySelector('#upload-cancel');
+  var uploadSelectImageElement = document.querySelector('#upload-select-image');
+  var effectsRadioElements = document.querySelectorAll('.effects__radio');
+  var textDescriptionElement = document.querySelector('.text__description');
+  var textHahtagsElement = document.querySelector('.text__hashtags');
+  var scaleControlSmallerElement = document.querySelector('.scale__control--smaller');
+  var scaleControlBiggerElement = document.querySelector('.scale__control--bigger');
+  var effectLevelElement = document.querySelector('.effect-level');
+  var effectLevelPinElement = document.querySelector('.effect-level__pin');
+  var effectLevelLineElement = document.querySelector('.effect-level__line');
+  var effectLevelDepthElement = document.querySelector('.effect-level__depth');
+  var uploadPreviewImageElement = document.querySelector('.img-upload__preview img');
+  var imgUploadOverlayElement = document.querySelector('.img-upload__overlay');
+  var scaleControlValueElement = document.querySelector('.scale__control--value');
+  var effectLevelValueElement = document.querySelector('.effect-level__value');
+  var successMessageElement = document.querySelector('#success').content.querySelector('.success');
+  var successButtonElement = successMessageElement.querySelector('.success__button');
+  var errorMessageElement = document.querySelector('#error').content.querySelector('.error');
+  var errorButtonElement = errorMessageElement.querySelector('.error__button');
 
-  var Effect = {
+  var effects = {
     chrome: {
       FILTER_NAME: 'grayscale',
       MIN: 0,
@@ -70,27 +72,27 @@
   var uploadedImage = {
     setSize: function (value) {
       uploadedImageSize = value;
-      scaleControlValue.value = value + '%';
-      uploadPreviewImage.style.transform = 'scale(' + value / 100 + ')';
+      scaleControlValueElement.value = value + '%';
+      uploadPreviewImageElement.style.transform = 'scale(' + value / 100 + ')';
     },
     setEffect: function (filter) {
       uploadedImageEffect = filter;
       this.setEffectValue(DEFAULT_EFFECT_VALUE, true);
-      uploadPreviewImage.className = '';
+      uploadPreviewImageElement.className = '';
       if (filter === DEFAULT_EFFECT) {
-        uploadPreviewImage.style.filter = '';
-        window.util.hideBlock('.effect-level');
+        uploadPreviewImageElement.style.filter = '';
+        window.util.hideBlock(effectLevelElement);
       } else {
         this.setFilter(effectMethods.getFilter(filter, DEFAULT_EFFECT_VALUE));
-        uploadPreviewImage.classList.add('effects__preview--' + filter);
-        window.util.showBlock('.effect-level');
+        uploadPreviewImageElement.classList.add('effects__preview--' + filter);
+        window.util.showBlock(effectLevelElement);
       }
     },
     setEffectValue: function (value, moveSlider) {
-      effectLevelValue.setAttribute('value', value);
+      effectLevelValueElement.setAttribute('value', value);
       if (moveSlider) {
-        effectLevelPin.style.left = value + '%';
-        effectLevelDepth.style.width = value + '%';
+        effectLevelPinElement.style.left = value + '%';
+        effectLevelDepthElement.style.width = value + '%';
       }
     },
     setSizeSmaller: function () {
@@ -106,17 +108,17 @@
       }
     },
     setFilter: function (value) {
-      uploadPreviewImage.style.filter = value;
+      uploadPreviewImageElement.style.filter = value;
     }
   };
 
   var effectMethods = {
     getStep: function (filter) {
-      var currentFilter = Effect[filter];
+      var currentFilter = effects[filter];
       return (currentFilter.MAX - currentFilter.MIN) / SLIDER_SCALE;
     },
     getFilter: function (filter, value) {
-      var currentFilter = Effect[filter];
+      var currentFilter = effects[filter];
       var filterStyle = currentFilter.FILTER_NAME + '(';
       filterStyle += value * this.getStep(filter) + currentFilter.MIN;
       filterStyle += currentFilter.UNIT + ')';
@@ -126,14 +128,14 @@
 
   var closeUploadForm = function () {
     window.util.switchBodyModalMode(true);
-    window.util.hideBlock('.img-upload__overlay');
-    uploadSelectImage.reset();
-    textHahtags.setCustomValidity('');
+    window.util.hideBlock(imgUploadOverlayElement);
+    uploadSelectImageElement.reset();
+    textHahtagsElement.setCustomValidity('');
     document.removeEventListener('keydown', onSetupEscPress);
-    uploadCancel.removeEventListener('click', onSetupCloseClick);
-    scaleControlSmaller.removeEventListener('click', onScaleControlSmallerClick);
-    scaleControlBigger.removeEventListener('click', onScaleControlBiggerClick);
-    effectsRadio.forEach(function (item) {
+    uploadCancelElement.removeEventListener('click', onSetupCloseClick);
+    scaleControlSmallerElement.removeEventListener('click', onScaleControlSmallerClick);
+    scaleControlBiggerElement.removeEventListener('click', onScaleControlBiggerClick);
+    effectsRadioElements.forEach(function (item) {
       item.removeEventListener('change', onEffectChange);
     });
   };
@@ -143,33 +145,33 @@
   };
 
   var showSuccessMessage = function () {
-    document.querySelector('main').appendChild(successMessage);
+    document.querySelector('main').appendChild(successMessageElement);
 
     document.addEventListener('keydown', onSuccessEscPress);
-    successButton.addEventListener('click', onSuccessButtonClick);
-    successMessage.addEventListener('click', onSuccessClick);
+    successButtonElement.addEventListener('click', onSuccessButtonClick);
+    successMessageElement.addEventListener('click', onSuccessClick);
   };
 
   var showErrorMessage = function () {
-    document.querySelector('main').appendChild(errorMessage);
+    document.querySelector('main').appendChild(errorMessageElement);
 
     document.addEventListener('keydown', onErrorEscPress);
-    errorButton.addEventListener('click', onErrorButtonClick);
-    errorMessage.addEventListener('click', onErrorClick);
+    errorButtonElement.addEventListener('click', onErrorButtonClick);
+    errorMessageElement.addEventListener('click', onErrorClick);
   };
 
   var hideSuccessMessage = function () {
     document.removeEventListener('keydown', onSuccessEscPress);
-    successButton.removeEventListener('click', onSuccessButtonClick);
-    successMessage.removeEventListener('click', onSuccessClick);
-    successMessage.remove();
+    successButtonElement.removeEventListener('click', onSuccessButtonClick);
+    successMessageElement.removeEventListener('click', onSuccessClick);
+    successMessageElement.remove();
   };
 
   var hideErrorMessage = function () {
     document.removeEventListener('keydown', onErrorEscPress);
     document.removeEventListener('click', onErrorButtonClick);
-    errorMessage.removeEventListener('click', onErrorClick);
-    errorMessage.remove();
+    errorMessageElement.removeEventListener('click', onErrorClick);
+    errorMessageElement.remove();
   };
 
   var renderPreview = function (input, img, onLoad) {
@@ -179,7 +181,7 @@
       onLoad(img, evt.target.result);
     });
 
-    reader.readAsDataURL(uploadFile.files[0]);
+    reader.readAsDataURL(uploadFileElement.files[0]);
   };
 
   var onSuccessEscPress = function (evt) {
@@ -215,17 +217,17 @@
   };
 
   var onUploadFileChange = function () {
-    uploadFile.blur();
+    uploadFileElement.blur();
 
-    if (uploadFile.files && uploadFile.files[0]) {
-      renderPreview(uploadFile, uploadPreviewImage, onReaderLoaded);
+    if (uploadFileElement.files && uploadFileElement.files[0]) {
+      renderPreview(uploadFileElement, uploadPreviewImageElement, onReaderLoaded);
     }
 
     document.addEventListener('keydown', onSetupEscPress);
-    uploadCancel.addEventListener('click', onSetupCloseClick);
-    scaleControlSmaller.addEventListener('click', onScaleControlSmallerClick);
-    scaleControlBigger.addEventListener('click', onScaleControlBiggerClick);
-    effectsRadio.forEach(function (item) {
+    uploadCancelElement.addEventListener('click', onSetupCloseClick);
+    scaleControlSmallerElement.addEventListener('click', onScaleControlSmallerClick);
+    scaleControlBiggerElement.addEventListener('click', onScaleControlBiggerClick);
+    effectsRadioElements.forEach(function (item) {
       item.addEventListener('change', onEffectChange);
     });
   };
@@ -233,7 +235,7 @@
   var onReaderLoaded = function (img, result) {
     img.src = result;
     window.util.switchBodyModalMode();
-    window.util.showBlock('.img-upload__overlay');
+    window.util.showBlock(imgUploadOverlayElement);
     uploadedImage.setSize(DEFAULT_SIZE_VALUE);
     uploadedImage.setEffect(DEFAULT_EFFECT);
     uploadedImage.setEffectValue(DEFAULT_EFFECT_VALUE, true);
@@ -244,7 +246,7 @@
   };
 
   var onSetupEscPress = function (evt) {
-    if (evt.key === window.util.Key.ESC && evt.target && evt.target !== textHahtags && evt.target !== textDescription) {
+    if (evt.key === window.util.Key.ESC && evt.target && evt.target !== textHahtagsElement && evt.target !== textDescriptionElement) {
       closeUploadForm();
     }
   };
@@ -269,11 +271,11 @@
   };
 
   var onEffectLevelPinMousemove = function (evt) {
-    var lineWidth = effectLevelLine.offsetWidth;
-    var lineLeft = effectLevelLine.getBoundingClientRect().left;
-    var lineRight = effectLevelLine.getBoundingClientRect().right;
+    var lineWidth = effectLevelLineElement.offsetWidth;
+    var lineLeft = effectLevelLineElement.getBoundingClientRect().left;
+    var lineRight = effectLevelLineElement.getBoundingClientRect().right;
     var shift = startCoord - evt.clientX;
-    var pinPos = effectLevelPin.offsetLeft - shift;
+    var pinPos = effectLevelPinElement.offsetLeft - shift;
 
     if (evt.clientX < lineLeft) {
       pinPos = 0;
@@ -283,7 +285,7 @@
 
     startCoord = evt.clientX;
 
-    effectLevelPin.style.left = pinPos + 'px';
+    effectLevelPinElement.style.left = pinPos + 'px';
 
     var resultValue = calculateSliderValue(pinPos, SLIDER_SCALE, lineWidth);
 
@@ -311,7 +313,7 @@
     showErrorMessage();
   };
 
-  uploadSelectImage.addEventListener('submit', onUploadSelectImageSubmit);
-  uploadFile.addEventListener('change', onUploadFileChange);
-  effectLevelPin.addEventListener('mousedown', onEffectLevelPinMousedown);
+  uploadSelectImageElement.addEventListener('submit', onUploadSelectImageSubmit);
+  uploadFileElement.addEventListener('change', onUploadFileChange);
+  effectLevelPinElement.addEventListener('mousedown', onEffectLevelPinMousedown);
 }());
